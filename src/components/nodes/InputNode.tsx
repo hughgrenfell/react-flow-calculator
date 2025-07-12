@@ -1,7 +1,6 @@
 'use client';
 
 import { Handle, Position, NodeProps } from 'reactflow';
-import { useFlowStore } from '@/lib/flowStore';
 
 type InputNodeData = {
   output: number;

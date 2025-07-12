@@ -18,6 +18,19 @@ import InputNode from './nodes/InputNode';
 
 import { useFlowStore } from '@/lib/flowStore';
 
+// ✅ Local types
+type InputNodeData = {
+  output: number;
+  onChange: (id: string, value: number) => void;
+};
+
+type OperatorNodeData = {
+  inputs: number[];
+  output: number;
+};
+
+type CustomNodeData = InputNodeData | OperatorNodeData;
+
 const nodeTypes = {
   add: AddNode,
   subtract: SubtractNode,
@@ -37,7 +50,7 @@ export default function FlowEditor() {
     onEdgesChange,
     onConnect,
     addNode,
-    changeInputValue, // ✅ Pull in from Zustand
+    changeInputValue,
   } = useFlowStore();
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -58,20 +71,21 @@ export default function FlowEditor() {
         y: event.clientY - bounds.top,
       });
 
-      // Default node data
-      let data: any = {
-        inputs: [0, 0],
-        output: 0,
-      };
+      let data: CustomNodeData;
 
       if (type === 'input') {
         data = {
           output: 0,
-          onChange: changeInputValue, // ✅ Required for input nodes to work
+          onChange: changeInputValue,
+        };
+      } else {
+        data = {
+          inputs: [0, 0],
+          output: 0,
         };
       }
 
-      const newNode: Node = {
+      const newNode: Node<CustomNodeData> = {
         id: `${+new Date()}`,
         type,
         position,
