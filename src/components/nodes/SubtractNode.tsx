@@ -1,17 +1,20 @@
 'use client';
 
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, NodeProps } from 'reactflow';
 
-export default function SubtractNode({ data }: any) {
-  const [a = 0, b = 0] = data.inputs || [];
-  const result = a - b;
+type OperatorNodeData = {
+  inputs: number[];
+  output: number;
+};
 
+export default function SubtractNode({ data }: NodeProps<OperatorNodeData>) {
   return (
-    <div className="p-2 bg-red-100 border rounded text-center min-w-[100px]">
-      <Handle type="target" position={Position.Top} id="a" />
-      <Handle type="target" position={Position.Top} id="b" />
-      <div className="font-semibold">Subtract</div>
-      <div>{a} − {b} = <strong>{result}</strong></div>
+    <div className="p-2 bg-yellow-100 border rounded text-center min-w-[100px]">
+      <div className="font-semibold">−</div>
+      <div className="text-sm">
+        {data.inputs?.[0] ?? 0} − {data.inputs?.[1] ?? 0} = {data.output}
+      </div>
+      <Handle type="target" position={Position.Top} id="input" />
       <Handle type="source" position={Position.Bottom} id="result" />
     </div>
   );
